@@ -5,9 +5,31 @@ const StorageManager = {
     enabled: false,
     targetLanguage: 'ja',
     sourceLanguage: 'auto',
-    translateBehavior: 'update', // 'update', 'newtab', 'popup'
+    translateBehavior: 'inline', // 'inline', 'update', 'newtab', 'popup'
     autoRunUrls: [],
-    autoRunEnabled: false
+    autoRunEnabled: false,
+    translatorLinks: [
+      {
+        name: 'Google Translate (Free)',
+        type: 'google',
+        url: 'https://translate.googleapis.com/translate_a/single?client=gtx&sl={source}&tl={target}&dt=t&q={text}',
+        enabled: true
+      },
+      {
+        name: 'LibreTranslate (Free)',
+        type: 'libretranslate',
+        url: 'https://libretranslate.com/translate',
+        method: 'POST',
+        enabled: false
+      },
+      {
+        name: 'MyMemory (Free)',
+        type: 'mymemory',
+        url: 'https://api.mymemory.translated.net/get?q={text}&langpair={source}|{target}',
+        enabled: false
+      }
+    ],
+    showInlineTranslation: true
   },
 
   // Get all settings

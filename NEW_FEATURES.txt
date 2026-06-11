@@ -1,0 +1,330 @@
+🎉 NEW FEATURES - Caption Translator v1.0
+
+=== WHAT'S NEW ===
+
+1. INLINE TRANSLATION (Best Feature!)
+   - Translations now appear DIRECTLY in Google Meet
+   - Beautiful gradient display below the video
+   - No need to switch between tabs
+   - Automatically shows for 7 seconds
+   
+2. MULTIPLE TRANSLATOR SERVICES
+   - Google Translate (Free) - Built-in
+   - LibreTranslate (Free, Open Source) - Built-in
+   - MyMemory (Free) - Built-in
+   - Add your own custom translator APIs!
+   
+3. ENABLE/DISABLE TRANSLATORS
+   - Check/uncheck translators in the popup
+   - Extension tries enabled translators in order
+   - Fallback to Google Translate URL if all fail
+   
+4. DISPLAY MODES
+   - Inline in Meet (NEW & RECOMMENDED)
+   - Update Existing Tab
+   - Always New Tab
+   - Popup Window
+
+=== HOW TO USE ===
+
+STEP 1: Generate Icons & Load Extension
+   - Open generate-icons.html → Generate icons
+   - Load extension in chrome://extensions/
+
+STEP 2: Configure Translator
+   - Click extension icon
+   - Go to "Translator Services" section
+   - Enable the translators you want to use
+   - Google Translate is enabled by default
+
+STEP 3: Set Display Mode
+   - In "Translation Settings"
+   - Select "Inline in Meet (Best)" for best experience
+   - This shows translation directly in the meeting
+
+STEP 4: Start Translating
+   - Join Google Meet
+   - Enable captions (CC button)
+   - Click extension icon → Start
+   - Speak or play audio
+   - See translation appear below video!
+
+=== INLINE TRANSLATION ===
+
+What it looks like:
+┌─────────────────────────────────────┐
+│           TRANSLATION               │
+│  こんにちは、元気ですか？            │
+│  (Beautiful gradient background)    │
+└─────────────────────────────────────┘
+
+Features:
+- Appears below the video area
+- Gradient blue-to-green background
+- Large, readable text (18px)
+- Auto-hides after 7 seconds
+- Updates with each new caption
+- Doesn't block important UI elements
+
+=== TRANSLATOR SERVICES ===
+
+Built-in Services:
+✓ Google Translate (Free) - Enabled by default
+✓ LibreTranslate (Free, Open Source) - Enable in popup
+✓ MyMemory (Free) - Enable in popup
+
+The extension tries enabled translators in order:
+1. First enabled translator → If fails →
+2. Second enabled translator → If fails →
+3. Falls back to Google Translate URL
+
+=== ADDING CUSTOM TRANSLATORS ===
+
+Click "+ Add Custom Translator" button
+
+Example 1: Simple GET API
+Name: My Translator
+Type: custom
+URL: https://api.example.com/translate?text={text}&from={source}&to={target}
+Method: GET
+
+Example 2: DeepL API (Requires API Key)
+Name: DeepL
+Type: deepl
+URL: https://api-free.deepl.com/v2/translate
+Method: POST
+Note: Best quality, 500k chars/month free
+
+See translator-examples.txt for more examples!
+
+=== COMPARISON: OLD vs NEW ===
+
+OLD Way:
+1. Extension detects caption
+2. Opens Google Translate in new tab
+3. You switch to tab to see translation
+4. Switch back to Meet
+5. Repeat for each caption
+
+NEW Way (Inline Mode):
+1. Extension detects caption
+2. Translation appears DIRECTLY in Meet
+3. You see both original caption AND translation
+4. No tab switching needed!
+5. Stay focused on the meeting
+
+=== DISPLAY MODES EXPLAINED ===
+
+1. Inline in Meet ⭐ RECOMMENDED
+   - Shows translation directly in the meeting
+   - Beautiful gradient display
+   - No tab switching needed
+   - Best user experience
+
+2. Update Existing Tab
+   - Opens one Google Translate tab
+   - Updates it with each caption
+   - Good if you want full Google Translate features
+
+3. Always New Tab
+   - Opens new tab for each caption
+   - Can get messy quickly
+   - Not recommended
+
+4. Popup Window
+   - Opens small popup window
+   - Updates with each caption
+   - Keeps separate from main browser
+
+=== MANAGING TRANSLATORS ===
+
+In the popup under "Translator Services":
+
+To Enable/Disable:
+- Check/uncheck the checkbox next to translator name
+- Changes save automatically
+
+To Remove:
+- Click the "✕" button next to translator name
+- Confirms before removing
+- Cannot remove default Google Translate
+
+To Add:
+- Click "+ Add Custom Translator"
+- Follow the prompts
+- See translator-examples.txt for help
+
+=== LANGUAGE SUPPORT ===
+
+All Google Translate languages supported:
+- English, Spanish, French, German, Italian
+- Chinese, Japanese, Korean, Arabic
+- Portuguese, Russian, Hindi, and 100+ more!
+
+Source Language:
+- Set to "Auto Detect" (recommended)
+- Or choose specific language
+
+Target Language:
+- Choose your preferred language
+- Changes immediately
+
+=== PERFORMANCE ===
+
+Inline Mode:
+- Fast (local display)
+- No network overhead for display
+- Translation happens in background
+- Smooth, no lag
+
+Tab Modes:
+- Opens browser tab
+- Slight delay for tab switching
+- Uses Google Translate website
+
+=== TIPS FOR BEST EXPERIENCE ===
+
+1. Use "Inline in Meet" mode
+   - Best user experience
+   - No tab switching
+   - Clean, beautiful display
+
+2. Enable multiple translators
+   - Extension will try them in order
+   - Automatic fallback if one fails
+   - Google Translate as last resort
+
+3. Position the inline translation
+   - Appears at bottom center
+   - Doesn't block video or controls
+   - Auto-hides after 7 seconds
+
+4. Check translator status
+   - Look at floating overlay (top-right)
+   - Shows "Translating..." status
+   - Shows "Translated ✓" when done
+
+5. Clear history if needed
+   - Click "Clear History" button
+   - Resets duplicate detection
+   - Allows re-sending same caption
+
+=== PRIVACY & SECURITY ===
+
+What gets sent to translators:
+✓ Only caption text (that you enabled in Meet)
+✓ Source and target language codes
+
+What does NOT get sent:
+✗ Audio or video
+✗ Meeting URLs or IDs
+✗ Participant information
+✗ Any other meeting data
+
+Default translators (built-in):
+- Google Translate: Reputable, widely used
+- LibreTranslate: Open source, can self-host
+- MyMemory: Free public service
+
+Custom translators:
+- Check the privacy policy of the service
+- Only use trusted services
+- For sensitive meetings, use self-hosted LibreTranslate
+
+=== TROUBLESHOOTING NEW FEATURES ===
+
+Inline translation not showing:
+1. Make sure "Inline in Meet" is selected
+2. Check browser console (F12) for errors
+3. Verify captions are enabled in Meet
+4. Try refreshing the Meet page
+
+Translator not working:
+1. Check if translator is enabled (checkbox)
+2. Open console and look for fetch errors
+3. Some APIs require CORS support
+4. Try disabling and using only Google Translate
+5. Check translator-examples.txt for correct format
+
+Translation quality issues:
+1. Try different translator service
+2. DeepL has best quality (but requires API key)
+3. Google Translate is most reliable
+4. LibreTranslate is good for privacy
+
+=== UPGRADING FROM OLD VERSION ===
+
+If you used the old version:
+1. Reload the extension in chrome://extensions/
+2. Refresh any open Google Meet pages
+3. Open popup and set "Display Mode" to "Inline in Meet"
+4. Check "Translator Services" section
+5. Start translating!
+
+Your settings will be preserved:
+✓ Target language
+✓ Source language
+✓ Saved meeting URLs
+✓ Auto-run preferences
+
+New settings with defaults:
+- Display Mode: Inline in Meet
+- Translator Services: Google Translate enabled
+
+=== EXAMPLES ===
+
+Example 1: English to Japanese
+Setting: Source=Auto, Target=Japanese, Mode=Inline
+Caption: "Hello, how are you?"
+Result: Translation appears in Meet: "こんにちは、元気ですか？"
+
+Example 2: Spanish to English
+Setting: Source=Spanish, Target=English, Mode=Inline
+Caption: "Hola, ¿cómo estás?"
+Result: Translation appears: "Hello, how are you?"
+
+Example 3: Multi-language meeting
+Setting: Source=Auto, Target=Your language, Mode=Inline
+Caption: Any language spoken
+Result: Automatic detection and translation to your language
+
+=== ADVANCED: SELF-HOSTED TRANSLATION ===
+
+For maximum privacy, run your own LibreTranslate:
+
+1. Install: pip install libretranslate
+2. Run: libretranslate --host 0.0.0.0
+3. In extension, disable all translators
+4. Add custom translator:
+   Name: My LibreTranslate
+   Type: libretranslate
+   URL: http://localhost:5000/translate
+   Method: POST
+5. Enable it
+
+Now all translations stay on your computer!
+
+=== CONTRIBUTING ===
+
+Want to add more translator services?
+1. Edit storage.js → defaults.translatorLinks
+2. Add new translator with correct URL format
+3. Test it!
+4. Share with others
+
+See translator-examples.txt for API examples.
+
+=== SUPPORT ===
+
+Having issues?
+1. Check TROUBLESHOOTING.md
+2. Open browser console (F12)
+3. Check translator-examples.txt
+4. Verify API keys if using paid services
+
+=== ENJOY! ===
+
+The new inline translation feature makes meetings much easier!
+No more switching tabs - translations appear right where you need them.
+
+Happy translating! 🌐✨

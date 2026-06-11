@@ -55,6 +55,19 @@
   padding: 16px;
 }
 
+#meet-caption-translator-overlay .mct-caption-wrapper {
+  margin-bottom: 12px;
+}
+
+#meet-caption-translator-overlay .mct-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
 #meet-caption-translator-overlay .mct-caption {
   background: #f8f9fa;
   padding: 12px;
