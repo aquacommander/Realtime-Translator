@@ -6,12 +6,14 @@
   let isEnabled = false;
   let targetLanguage = 'ja';
   let sourceLanguage = 'auto';
-  let translateBehavior = 'update';
+  let translateBehavior = 'inline';
   let captionHistory = [];
   let lastCaptionText = '';
+  let lastTranslation = '';
   let debounceTimer = null;
   let observer = null;
   let overlayElement = null;
+  let inlineTranslationElement = null;
 
   const DEBOUNCE_DELAY = 700;
   const HISTORY_SIZE = 10;
@@ -34,6 +36,9 @@
     
     // Create overlay
     createOverlay();
+    
+    // Create inline translation display
+    createInlineTranslation();
     
     // Start observing if auto-run is enabled
     const currentUrl = window.location.href;
@@ -217,7 +222,7 @@
            style.opacity !== '0';
   }
 
-  // Send stable caption to Google Translate
+  // Send stable caption to translator
   async function sendStableCaption(text) {
     if (!text || text.length === 0) return;
     
@@ -233,27 +238,120 @@
       captionHistory.shift();
     }
     
-    console.log('Sending caption to translate:', text);
-    updateOverlayStatus('Sending to Google Translate...');
+    console.log('Translating caption:', text);
+    updateOverlayStatus('Translating...');
     
-    // Send to Google Translate
+    // Translate caption
     try {
-      await TranslateTabManager.openOrUpdateTranslate(
+      // Get translation from custom links
+      const translation = await TranslateTabManager.translateText(
         text,
         targetLanguage,
-        sourceLanguage,
-        translateBehavior
+        sourceLanguage
       );
-      updateOverlayStatus('Sent ✓');
+      
+      if (translation) {
+        lastTranslation = translation;
+        
+        // Show inline translation
+        if (translateBehavior === 'inline') {
+          showInlineTranslation(translation);
+          updateOverlayStatus('Translated ✓');
+        } else {
+          // Open in tab/popup
+          await TranslateTabManager.openOrUpdateTranslate(
+            text,
+            targetLanguage,
+            sourceLanguage,
+            translateBehavior
+          );
+          updateOverlayStatus('Sent ✓');
+        }
+      } else {
+        // Fallback to opening Google Translate
+        await TranslateTabManager.openOrUpdateTranslate(
+          text,
+          targetLanguage,
+          sourceLanguage,
+          translateBehavior === 'inline' ? 'update' : translateBehavior
+        );
+        updateOverlayStatus('Opened in browser ✓');
+      }
+      
       setTimeout(() => {
         if (isEnabled) {
           updateOverlayStatus('Active - Waiting for captions');
         }
       }, 2000);
     } catch (error) {
-      console.error('Error sending to translate:', error);
-      updateOverlayStatus('Error sending');
+      console.error('Error translating:', error);
+      updateOverlayStatus('Error translating');
     }
+  }
+
+  // Create inline translation display
+  function createInlineTranslation() {
+    inlineTranslationElement = document.createElement('div');
+    inlineTranslationElement.id = 'meet-caption-translator-inline';
+    inlineTranslationElement.innerHTML = `
+      <div class="inline-translation-header">Translation</div>
+      <div class="inline-translation-text"></div>
+    `;
+    inlineTranslationElement.style.cssText = `
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, rgba(66, 133, 244, 0.95), rgba(52, 168, 83, 0.95));
+      color: white;
+      padding: 0;
+      border-radius: 12px;
+      font-size: 16px;
+      max-width: 70%;
+      min-width: 300px;
+      text-align: center;
+      z-index: 999998;
+      display: none;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    `;
+    
+    const header = inlineTranslationElement.querySelector('.inline-translation-header');
+    header.style.cssText = `
+      background: rgba(0, 0, 0, 0.2);
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    `;
+    
+    const textDiv = inlineTranslationElement.querySelector('.inline-translation-text');
+    textDiv.style.cssText = `
+      padding: 16px 24px;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.5;
+    `;
+    
+    document.body.appendChild(inlineTranslationElement);
+  }
+
+  // Show inline translation
+  function showInlineTranslation(translation) {
+    if (!inlineTranslationElement) return;
+    
+    const textDiv = inlineTranslationElement.querySelector('.inline-translation-text');
+    textDiv.textContent = translation;
+    inlineTranslationElement.style.display = 'block';
+    
+    // Auto-hide after 7 seconds
+    setTimeout(() => {
+      if (textDiv.textContent === translation) {
+        inlineTranslationElement.style.display = 'none';
+      }
+    }, 7000);
   }
 
   // Clear caption history
@@ -273,7 +371,10 @@
         <button class="mct-btn mct-close" id="mct-close">✕</button>
       </div>
       <div class="mct-body">
-        <div class="mct-caption" id="mct-caption">No caption yet</div>
+        <div class="mct-caption-wrapper">
+          <div class="mct-label">Original Caption:</div>
+          <div class="mct-caption" id="mct-caption">No caption yet</div>
+        </div>
         <div class="mct-info">
           <span class="mct-lang">→ <span id="mct-target-lang">JA</span></span>
           <span class="mct-status" id="mct-status">Inactive</span>

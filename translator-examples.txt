@@ -1,0 +1,168 @@
+TRANSLATOR API EXAMPLES
+
+This file shows examples of how to add custom translator services to the extension.
+
+=== BUILT-IN TRANSLATORS (Already included) ===
+
+1. Google Translate (Free) - ENABLED by default
+   Type: google
+   Method: GET
+   URL: https://translate.googleapis.com/translate_a/single?client=gtx&sl={source}&tl={target}&dt=t&q={text}
+
+2. LibreTranslate (Free, Open Source)
+   Type: libretranslate
+   Method: POST
+   URL: https://libretranslate.com/translate
+   Note: Enable this in the popup if you want to use it
+
+3. MyMemory (Free)
+   Type: mymemory
+   Method: GET
+   URL: https://api.mymemory.translated.net/get?q={text}&langpair={source}|{target}
+
+=== HOW TO ADD CUSTOM TRANSLATOR ===
+
+In the extension popup:
+1. Click "+ Add Custom Translator"
+2. Enter the information when prompted
+
+Example prompts:
+
+Name: DeepL Free API
+Type: custom
+URL: https://api-free.deepl.com/v2/translate?auth_key=YOUR_KEY&text={text}&source_lang={source}&target_lang={target}
+Method: GET
+
+=== POPULAR FREE TRANSLATION APIS ===
+
+1. DEEPL (Requires API Key - 500,000 chars/month free)
+   Website: https://www.deepl.com/pro-api
+   Example URL: https://api-free.deepl.com/v2/translate?auth_key=YOUR_KEY&text={text}&source_lang={source}&target_lang={target}
+   Type: deepl
+   Method: POST (with JSON body)
+
+2. MICROSOFT TRANSLATOR (Requires API Key)
+   Website: https://azure.microsoft.com/en-us/services/cognitive-services/translator/
+   Example URL: https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to={target}
+   Type: custom
+   Method: POST
+   Note: Requires Authorization header
+
+3. YANDEX TRANSLATE (Requires API Key)
+   Website: https://translate.yandex.com/developers
+   Example URL: https://translate.yandex.net/api/v1.5/tr.json/translate?key=YOUR_KEY&text={text}&lang={source}-{target}
+   Type: custom
+   Method: GET
+
+4. PAPAGO (NAVER - Requires API Key, Good for Asian languages)
+   Website: https://developers.naver.com/products/papago/
+   Example URL: https://openapi.naver.com/v1/papago/n2mt
+   Type: custom
+   Method: POST
+   Note: Requires headers
+
+=== LANGUAGE CODES ===
+
+Common language codes (ISO 639-1):
+- en: English
+- es: Spanish
+- fr: French
+- de: German
+- it: Italian
+- pt: Portuguese
+- ru: Russian
+- ja: Japanese
+- ko: Korean
+- zh-CN: Chinese (Simplified)
+- zh-TW: Chinese (Traditional)
+- ar: Arabic
+- hi: Hindi
+- auto: Auto-detect (for source language)
+
+=== PLACEHOLDERS ===
+
+Use these placeholders in your custom translator URL:
+- {text} = The caption text to translate
+- {source} = Source language code (e.g., "en" or "auto")
+- {target} = Target language code (e.g., "ja")
+
+Example:
+https://api.example.com/translate?from={source}&to={target}&text={text}
+
+When a caption "Hello world" needs to be translated from English to Japanese:
+https://api.example.com/translate?from=en&to=ja&text=Hello%20world
+
+=== RESPONSE FORMAT ===
+
+The extension expects JSON responses in these formats:
+
+Google format:
+[[["translated text", "original text", null, null, 0]]]
+
+DeepL format:
+{"translations": [{"text": "translated text"}]}
+
+LibreTranslate format:
+{"translatedText": "translated text"}
+
+MyMemory format:
+{"responseData": {"translatedText": "translated text"}}
+
+Custom format (any of these fields):
+{"translation": "translated text"}
+{"text": "translated text"}
+{"result": "translated text"}
+
+=== TIPS ===
+
+1. Always test your custom translator first with a simple phrase
+2. Check the API documentation for correct URL format
+3. Some APIs require API keys - sign up on their website
+4. Free APIs may have rate limits
+5. Use "inline" mode for best experience (shows translation in Meet)
+6. Enable multiple translators - the extension will try them in order
+7. Keep Google Translate enabled as a fallback
+
+=== TROUBLESHOOTING ===
+
+If your custom translator doesn't work:
+1. Open browser console (F12) and check for errors
+2. Verify the URL format is correct
+3. Check if the API requires authentication
+4. Test the API directly in your browser or Postman
+5. Make sure the response format matches one of the supported types
+6. Check if CORS is enabled on the API (required for browser requests)
+
+=== CORS ISSUES ===
+
+Some APIs may not work due to CORS (Cross-Origin Resource Sharing) restrictions.
+Solutions:
+1. Use APIs that support CORS (like the built-in ones)
+2. Use a CORS proxy (not recommended for production)
+3. Create a simple backend server to proxy requests
+4. Use browser extensions that bypass CORS (for testing only)
+
+=== PRIVACY NOTE ===
+
+When using custom translator APIs:
+- Caption text is sent to the translator service
+- Check the privacy policy of the translator service
+- Built-in free translators (Google, LibreTranslate, MyMemory) are generally safe
+- For sensitive meetings, consider self-hosted solutions like LibreTranslate
+
+=== SELF-HOSTED LIBRETRANSLATE ===
+
+You can run your own LibreTranslate server:
+1. Install: pip install libretranslate
+2. Run: libretranslate --host 0.0.0.0 --port 5000
+3. Add to extension:
+   Name: My LibreTranslate
+   Type: libretranslate
+   URL: http://localhost:5000/translate
+   Method: POST
+
+This keeps all translation data on your own server!
+
+=== QUESTIONS? ===
+
+Check the main README.md and TROUBLESHOOTING.md for more help.

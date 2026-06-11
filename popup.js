@@ -16,6 +16,8 @@
   const savedUrlsContainer = document.getElementById('saved-urls');
   const clearHistoryBtn = document.getElementById('clear-history-btn');
   const openTranslateBtn = document.getElementById('open-translate-btn');
+  const translatorLinksContainer = document.getElementById('translator-links');
+  const addTranslatorBtn = document.getElementById('add-translator-btn');
 
   // Load settings on popup open
   async function loadSettings() {
@@ -27,6 +29,7 @@
     autoRunEnabledCheckbox.checked = settings.autoRunEnabled;
     
     renderSavedUrls(settings.autoRunUrls);
+    renderTranslatorLinks(settings.translatorLinks || []);
     
     // Get current tab to check status
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -185,12 +188,96 @@
     chrome.tabs.create({ url: 'https://translate.google.com/' });
   }
 
+  // Render translator links
+  function renderTranslatorLinks(links) {
+    translatorLinksContainer.innerHTML = '';
+    
+    if (!links || links.length === 0) {
+      translatorLinksContainer.innerHTML = '<p class="empty-text">No translator services configured</p>';
+      return;
+    }
+    
+    links.forEach((link, index) => {
+      const linkItem = document.createElement('div');
+      linkItem.className = 'translator-item';
+      linkItem.innerHTML = `
+        <div class="translator-info">
+          <input type="checkbox" ${link.enabled ? 'checked' : ''} data-index="${index}" class="translator-checkbox">
+          <div class="translator-details">
+            <span class="translator-name">${link.name}</span>
+            <span class="translator-type">${link.type}</span>
+          </div>
+        </div>
+        ${link.type !== 'google' ? '<button class="btn-remove" data-index="' + index + '">✕</button>' : ''}
+      `;
+      translatorLinksContainer.appendChild(linkItem);
+    });
+    
+    // Add event listeners
+    document.querySelectorAll('.translator-checkbox').forEach(checkbox => {
+      checkbox.addEventListener('change', (e) => {
+        toggleTranslator(parseInt(e.target.dataset.index), e.target.checked);
+      });
+    });
+    
+    document.querySelectorAll('.btn-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (confirm('Remove this translator service?')) {
+          removeTranslator(parseInt(btn.dataset.index));
+        }
+      });
+    });
+  }
+
+  // Toggle translator
+  async function toggleTranslator(index, enabled) {
+    const settings = await StorageManager.getSettings();
+    settings.translatorLinks[index].enabled = enabled;
+    await StorageManager.saveSettings(settings);
+  }
+
+  // Remove translator
+  async function removeTranslator(index) {
+    const settings = await StorageManager.getSettings();
+    settings.translatorLinks.splice(index, 1);
+    await StorageManager.saveSettings(settings);
+    renderTranslatorLinks(settings.translatorLinks);
+  }
+
+  // Add custom translator
+  async function addCustomTranslator() {
+    const name = prompt('Translator name (e.g., "DeepL API"):');
+    if (!name) return;
+    
+    const type = prompt('Translator type:\n- google (free)\n- deepl (API key needed)\n- libretranslate (free)\n- mymemory (free)\n- custom\n\nEnter type:') || 'custom';
+    
+    const url = prompt('API URL with placeholders:\n{text} = text to translate\n{source} = source language\n{target} = target language\n\nExample for GET:\nhttps://api.example.com/translate?from={source}&to={target}&text={text}\n\nFor POST, just enter base URL:\nhttps://api.example.com/translate');
+    if (!url) return;
+    
+    const method = prompt('Request method (GET or POST):')?.toUpperCase() || 'GET';
+    
+    const settings = await StorageManager.getSettings();
+    settings.translatorLinks = settings.translatorLinks || [];
+    settings.translatorLinks.push({
+      name: name,
+      type: type,
+      url: url,
+      method: method,
+      enabled: true
+    });
+    
+    await StorageManager.saveSettings(settings);
+    renderTranslatorLinks(settings.translatorLinks);
+    alert('Translator added! Enable it by checking the checkbox.');
+  }
+
   // Event listeners
   startBtn.addEventListener('click', startTranslation);
   stopBtn.addEventListener('click', stopTranslation);
   addUrlBtn.addEventListener('click', addMeetingUrl);
   clearHistoryBtn.addEventListener('click', clearHistory);
   openTranslateBtn.addEventListener('click', openTranslate);
+  addTranslatorBtn.addEventListener('click', addCustomTranslator);
 
   // Save settings on change
   sourceLangSelect.addEventListener('change', saveSettings);

@@ -1,9 +1,102 @@
-// Google Translate tab manager
+// Translate API manager
 const TranslateTabManager = {
   translateTabId: null,
   translateWindowId: null,
 
-  // Build Google Translate URL
+  // Translate text using custom translator URL
+  async translateText(text, targetLang, sourceLang = 'auto') {
+    const settings = await StorageManager.getSettings();
+    const translatorLinks = settings.translatorLinks || [];
+    
+    // Try custom translator links first
+    for (const link of translatorLinks) {
+      if (!link.enabled) continue;
+      
+      try {
+        const result = await this.translateWithCustomLink(text, targetLang, sourceLang, link);
+        if (result) return result;
+      } catch (error) {
+        console.error('Translation error with', link.name, error);
+      }
+    }
+    
+    // Fallback to Google Translate URL method
+    return null;
+  },
+
+  // Translate using custom link
+  async translateWithCustomLink(text, targetLang, sourceLang, link) {
+    try {
+      let response;
+      
+      if (link.method === 'POST') {
+        // POST request (e.g., LibreTranslate)
+        response = await fetch(link.url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            q: text,
+            source: sourceLang === 'auto' ? 'en' : sourceLang,
+            target: targetLang,
+            format: 'text'
+          })
+        });
+      } else {
+        // GET request (default)
+        const url = link.url
+          .replace('{text}', encodeURIComponent(text))
+          .replace('{target}', targetLang)
+          .replace('{source}', sourceLang);
+        
+        response = await fetch(url);
+      }
+      
+      const data = await response.json();
+      
+      // Parse response based on translator type
+      return this.parseTranslationResponse(data, link.type);
+    } catch (error) {
+      console.error('Fetch error:', error);
+      return null;
+    }
+  },
+
+  // Parse different translator API responses
+  parseTranslationResponse(data, type) {
+    try {
+      switch (type) {
+        case 'google':
+          // Google Translate Free API response
+          if (Array.isArray(data) && data[0] && Array.isArray(data[0])) {
+            return data[0].map(item => item[0]).join('');
+          }
+          return data.translated_text || data.translatedText || null;
+          
+        case 'deepl':
+          return data.translations?.[0]?.text || null;
+          
+        case 'libretranslate':
+          return data.translatedText || null;
+          
+        case 'mymemory':
+          return data.responseData?.translatedText || null;
+          
+        case 'custom':
+          return data.translation || data.text || data.result || null;
+          
+        default:
+          // Try to find any translation field
+          return data.translation || data.translatedText || data.text || null;
+      }
+    } catch (error) {
+      console.error('Parse error:', error);
+      return null;
+    }
+  },
+
+  // Build Google Translate URL (fallback)
   buildTranslateUrl(text, targetLang, sourceLang = 'auto') {
     const baseUrl = 'https://translate.google.com/';
     const params = new URLSearchParams({
