@@ -91,26 +91,6 @@ https://translate.google.com/?sl=auto&tl={lang}&text={caption}&op=translate
 - No backend server needed
 - Translation shown directly in Google Translate
 
-## File Structure
-
-```
-meet-caption-translator/
-├── manifest.json          # Extension manifest (Manifest V3)
-├── background.js          # Background service worker
-├── content.js             # Content script (caption detection)
-├── popup.html             # Extension popup UI
-├── popup.js               # Popup logic
-├── popup.css              # Popup styles
-├── overlay.css            # Floating overlay styles
-├── storage.js             # Storage management module
-├── translateTab.js        # Google Translate tab manager
-├── README.md              # This file
-└── icons/                 # Extension icons
-    ├── icon16.png
-    ├── icon48.png
-    └── icon128.png
-```
-
 ## Permissions
 
 - `storage`: Save user preferences and meeting URLs
