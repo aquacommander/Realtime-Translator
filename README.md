@@ -11,19 +11,9 @@ A Chrome extension that automatically translates Google Meet live captions using
 - 🔒 **Privacy-Focused**: No audio/video recording, no external servers
 - 📝 **Auto-Run**: Optionally auto-start for specific meeting URLs
 
-## Installation
-
-### Load Unpacked Extension
-
-1. Download or clone this repository
-2. Open Chrome and navigate to `chrome://extensions/`
-3. Enable **Developer mode** (toggle in top-right corner)
-4. Click **Load unpacked**
-5. Select the extension folder
 
 
 
-## Usage
 
 ### Basic Usage
 
