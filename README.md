@@ -155,9 +155,6 @@ All files are plain JavaScript/HTML/CSS:
 - Reload extension in `chrome://extensions/`
 - No build step required
 
-## License
-
-MIT License - Feel free to modify and distribute
 
 ## Contributing
 
