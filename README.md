@@ -149,14 +149,3 @@ All files are plain JavaScript/HTML/CSS:
 ## Contributing
 
 Contributions welcome! Please test thoroughly before submitting PRs.
-
-## Support
-
-For issues or questions, please check:
-1. This README
-2. Browser console for errors
-3. Extension permissions in Chrome
-
----
-
-**Note**: This extension is not affiliated with or endorsed by Google. Google Meet and Google Translate are trademarks of Google LLC.
