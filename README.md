@@ -138,14 +138,3 @@ This extension:
 3. Open DevTools Console (F12)
 4. Check console logs for debugging
 
-### Modifying
-
-All files are plain JavaScript/HTML/CSS:
-- Edit files directly
-- Reload extension in `chrome://extensions/`
-- No build step required
-
-
-## Contributing
-
-Contributions welcome! Please test thoroughly before submitting PRs.
