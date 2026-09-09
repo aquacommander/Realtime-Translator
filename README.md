@@ -128,13 +128,3 @@ This extension:
 1. Check popup settings for "Translate Window" option
 2. Try manually clicking "Open Google Translate" in popup
 3. Allow pop-ups for meet.google.com if needed
-
-## Development
-
-### Testing
-
-1. Load extension in Chrome
-2. Join a test Google Meet with captions
-3. Open DevTools Console (F12)
-4. Check console logs for debugging
-
