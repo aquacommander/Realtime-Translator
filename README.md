@@ -115,16 +115,3 @@ This extension:
 2. Enable captions in Google Meet (CC button)
 3. Click extension icon and click **Start**
 4. Check browser console for errors (F12)
-
-### Captions not detected
-
-1. Verify captions are visible in Google Meet
-2. Try refreshing the page
-3. Check if caption language is supported
-4. Look at floating overlay status
-
-### Google Translate not opening
-
-1. Check popup settings for "Translate Window" option
-2. Try manually clicking "Open Google Translate" in popup
-3. Allow pop-ups for meet.google.com if needed
