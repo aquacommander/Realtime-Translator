@@ -107,7 +107,6 @@ This extension:
 - Requires active internet connection
 - Depends on Google Translate website availability
 
-## Troubleshooting
 
 ### Extension not working
 
