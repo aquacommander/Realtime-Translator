@@ -2,7 +2,6 @@
 
 A Chrome extension that automatically translates Google Meet live captions using Google Translate.
 
-## Features
 
 - 🎯 **Real-time Translation**: Detects Google Meet captions and sends them to Google Translate
 - 🌍 **Multi-language Support**: Supports all languages available in Google Translate
